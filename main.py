@@ -6,6 +6,8 @@ def process_input(input_file):
     file = open(input_file, 'r')
 
     string = file.readline()
+    # string = file.readline()
+    print(string)
     string_list = str.split(string)
     int_list = [int(element) for element in string_list]
     arr = np.ndarray.reshape(np.asarray(int_list), 2, 4)

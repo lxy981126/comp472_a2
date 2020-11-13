@@ -13,26 +13,26 @@ def process_input(input_file):
             entry = np.ndarray.reshape(np.asarray(int_list), 2, 4)
             node = Node(entry, None)
             states = np.append(states, node)
-            print(entry)
-
     return states
 
 
 def extract_solution_path(node, solution_path):
-    file = open(solution_path, 'w')
-    while node is not None:
-        state = np.ndarray.reshape(node.entries, 1, 8)
-        np.savetxt(file, state, delimiter=' ', fmt='%i')
-        node = node.parent
-    file.close()
+    with open(solution_path, 'w') as file:
+        while node is not None:
+            state = np.ndarray.reshape(node.entries, 1, 8)
+            np.savetxt(file, state, delimiter=' ', fmt='%i')
+            file.flush()
+            node = node.parent
+        file.close()
 
 
 def extract_search_path(close_list, search_path):
-    file = open(search_path, 'w')
-    for node in close_list:
-        state = np.ndarray.reshape(node.entries, 1, 8)
-        np.savetxt(file, state, delimiter=' ', fmt='%i')
-    file.close()
+    with open(search_path, 'w') as file:
+        for node in close_list:
+            state = np.ndarray.reshape(node.entries, 1, 8)
+            np.savetxt(file, state, delimiter=' ', fmt='%i')
+            file.flush()
+        file.close()
 
 
 def run_uniform_cost_search(initial, index):
@@ -42,20 +42,25 @@ def run_uniform_cost_search(initial, index):
     ucs = UniformCostSearch(initial)
     process = Process(target=ucs.start)
     process.start()
-    process.join(timeout=60)
+    # process.join(timeout=60)
+    process.join()
 
     if process.is_alive():
         process.terminate()
-        with open(search_path, 'w') as file:
-            file.write("Not solution")
-            file.close()
-        with open(solution_path, 'w') as file:
-            file.write("No solution")
-            file.close()
-        print("ucs timeout")
+        process_timeout(search_path, solution_path)
     else:
         extract_search_path(ucs.close_list, search_path)
         extract_solution_path(ucs.goal, solution_path)
+
+
+def process_timeout(search_path, solution_path):
+    print("ucs timeout")
+    with open(search_path, 'w') as file:
+        file.write("Not solution")
+        file.close()
+    with open(solution_path, 'w') as file:
+        file.write("No solution")
+        file.close()
 
 
 if __name__ == '__main__':

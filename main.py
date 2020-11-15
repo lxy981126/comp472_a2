@@ -3,6 +3,7 @@ from UniformCostSearch import UniformCostSearch
 from GreedyBestFirstSearch import GreedBestFirstSearch
 from multiprocessing import Process
 import numpy as np
+import time
 import General
 
 
@@ -25,11 +26,17 @@ def run_uniform_cost_search():
     ucs = UniformCostSearch(initial_node)
 
     process = Process(target=ucs.start, args=(search_path, solution_path))
+    start_time = time.time()
     process.start()
-    process.join(timeout=60)
+    # process.join(timeout=60)
+    process.join()
+    exec_time = time.time() - start_time
     if process.is_alive():
         process.terminate()
         process_timeout(search_path, solution_path)
+    else:
+        with open(search_path, 'a') as file:
+            file.write(str(exec_time))
 
 
 def run_greedy_best_first_search():
@@ -38,12 +45,17 @@ def run_greedy_best_first_search():
 
     gbfs = GreedBestFirstSearch(initial_node)
     process = Process(target=gbfs.start, args=(General.h1, search_path, solution_path))
+    start_time = time.time()
     process.start()
     # process.join(timeout=60)
     process.join()
+    exec_time = time.time() - start_time
     if process.is_alive():
         process.terminate()
         process_timeout(search_path, solution_path)
+    else:
+        with open(search_path, 'a') as file:
+            file.write(str(exec_time))
 
 
 def process_timeout(search_path, solution_path):
@@ -64,6 +76,6 @@ if __name__ == '__main__':
     for initial_node in initial_nodes:
         print(initial_node.entries)
 
-        # run_uniform_cost_search()
-        run_greedy_best_first_search()
+        run_uniform_cost_search()
+        # run_greedy_best_first_search()
         i += 1

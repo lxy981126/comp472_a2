@@ -3,19 +3,16 @@ import numpy as np
 
 
 class Node:
-    # cost: int, cost from root node to current node:g(n)
-    # entries: 2*4 array
-    # parent: patent Node
-    # empty: 1D array with 2 elements for the empty tile
     def __init__(self, entries, parent):
         self.cost = 0
+        self.heuristic = 0
         self.entries = entries
         self.parent = parent
         self.empty = np.argwhere(entries == 0)[0]
         print("New Node Created: \n", self.entries, self.empty)
 
     def __lt__(self, other):
-        return self.cost < other.cost
+        return self.cost + self.heuristic < other.cost + other.heuristic
 
     def compute_successors(self):
         successors = np.array([])
@@ -32,8 +29,6 @@ class Node:
         diagonal = self.diagonal_move()
         successors = np.append(successors, diagonal)
 
-        # print("successors: ", successors.size)
-        # [print(element.entries) for element in successors]
         return successors
 
     def vertical_move(self):

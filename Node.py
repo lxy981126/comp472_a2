@@ -11,11 +11,11 @@ class Node:
         self.cost = 0
         self.entries = entries
         self.parent = parent
-        for i in range(0, 2):
-            for j in range(0, 4):
-                if entries[i][j] == 0:
-                    self.empty = [i, j]
+        self.empty = np.argwhere(entries == 0)[0]
         print("New Node Created: \n", self.entries, self.empty)
+
+    def __lt__(self, other):
+        return self.cost < other.cost
 
     def compute_successors(self):
         successors = np.array([])

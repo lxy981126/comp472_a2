@@ -11,28 +11,10 @@ def process_input(input_file):
             string_list = str.split(line)
             int_list = [int(element) for element in string_list]
             entry = np.ndarray.reshape(np.asarray(int_list), 2, 4)
+            # entry = np.array([[5, 2, 3, 4], [6, 0, 7, 1]])
             node = Node(entry, None)
             states = np.append(states, node)
     return states
-
-
-def extract_solution_path(node, solution_path):
-    with open(solution_path, 'w') as file:
-        while node is not None:
-            state = np.ndarray.reshape(node.entries, 1, 8)
-            np.savetxt(file, state, delimiter=' ', fmt='%i')
-            file.flush()
-            node = node.parent
-        file.close()
-
-
-def extract_search_path(close_list, search_path):
-    with open(search_path, 'w') as file:
-        for node in close_list:
-            state = np.ndarray.reshape(node.entries, 1, 8)
-            np.savetxt(file, state, delimiter=' ', fmt='%i')
-            file.flush()
-        file.close()
 
 
 def run_uniform_cost_search(initial, index):
@@ -40,23 +22,21 @@ def run_uniform_cost_search(initial, index):
     solution_path = "./output/" + str(index) + "_ucs_solution.txt"
 
     ucs = UniformCostSearch(initial)
-    process = Process(target=ucs.start)
+
+    process = Process(target=ucs.start, args=(search_path, solution_path))
     process.start()
-    # process.join(timeout=60)
-    process.join()
+    process.join(timeout=60)
+    # process.join()
 
     if process.is_alive():
         process.terminate()
         process_timeout(search_path, solution_path)
-    else:
-        extract_search_path(ucs.close_list, search_path)
-        extract_solution_path(ucs.goal, solution_path)
 
 
 def process_timeout(search_path, solution_path):
     print("ucs timeout")
     with open(search_path, 'w') as file:
-        file.write("Not solution")
+        file.write("No solution")
         file.close()
     with open(solution_path, 'w') as file:
         file.write("No solution")

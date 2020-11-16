@@ -12,8 +12,8 @@ def is_goal(node):
         return False
 
 
-def h0(node, target):
-    if np.array_equal(node.entries, target):
+def h0(node):
+    if np.array_equal(node.entries, goal1) or np.array_equal(node.entries, goal2):
         return 0
     else:
         return 1
@@ -41,8 +41,10 @@ def h1(node):
 def extract_solution_path(node, solution_path):
     with open(solution_path, 'w') as file:
         while node is not None:
+            values = np.array([[node.f, node.g, node.h]])
             state = np.ndarray.reshape(node.entries, 1, 8)
-            np.savetxt(file, state, delimiter=' ', fmt='%i')
+            values = np.append(values, state)
+            np.savetxt(file, [values], delimiter=' ', fmt='%i')
             file.flush()
             node = node.parent
         file.close()

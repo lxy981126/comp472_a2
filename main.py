@@ -44,7 +44,7 @@ def run_greedy_best_first_search():
     solution_path = "./output/" + str(i) + "_gbfs_solution.txt"
 
     gbfs = GreedBestFirstSearch(initial_node)
-    process = Process(target=gbfs.start, args=(General.h1, search_path, solution_path))
+    process = Process(target=gbfs.start, args=(General.h0, search_path, solution_path))
     start_time = time.time()
     process.start()
     # process.join(timeout=60)

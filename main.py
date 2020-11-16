@@ -14,8 +14,8 @@ def process_input():
         for line in file:
             string_list = str.split(line)
             int_list = [int(element) for element in string_list]
-            # entry = np.ndarray.reshape(np.asarray(int_list), 2, 4)
-            entry = np.array([[5, 2, 3, 4], [6, 0, 7, 1]])
+            entry = np.ndarray.reshape(np.asarray(int_list), 2, 4)
+            # entry = np.array([[5, 2, 3, 4], [6, 0, 7, 1]])
             node = Node(entry, None)
             states = np.append(states, node)
     return states
@@ -29,11 +29,12 @@ def run_uniform_cost_search():
     process = Process(target=ucs.start, args=(search_path, solution_path))
     start_time = time.time()
     process.start()
-    # process.join(timeout=60)
-    process.join()
+    process.join(timeout=60)
+    # process.join()
     exec_time = time.time() - start_time
     if process.is_alive():
         process.terminate()
+        print("ucs: timeout")
         General.process_failure(search_path, solution_path)
     else:
         with open(search_path, 'a') as file:
@@ -48,11 +49,12 @@ def run_greedy_best_first_search():
     process = Process(target=gbfs.start, args=(General.hamming_distance, search_path, solution_path))
     start_time = time.time()
     process.start()
-    # process.join(timeout=60)
-    process.join()
+    process.join(timeout=60)
+    # process.join()
     exec_time = time.time() - start_time
     if process.is_alive():
         process.terminate()
+        print("gbfs: timeout")
         General.process_failure(search_path, solution_path)
     else:
         with open(search_path, 'a') as file:
@@ -67,11 +69,12 @@ def run_a_star():
     process = Process(target=astar.start, args=(General.hamming_distance, search_path, solution_path))
     start_time = time.time()
     process.start()
-    # process.join(timeout=60)
-    process.join()
+    process.join(timeout=60)
+    # process.join()
     exec_time = time.time() - start_time
     if process.is_alive():
         process.terminate()
+        print("a*: timeout")
         General.process_failure(search_path, solution_path)
     else:
         with open(search_path, 'a') as file:
@@ -85,8 +88,7 @@ if __name__ == '__main__':
 
     for initial_node in initial_nodes:
         print(initial_node.entries)
-
-        # run_uniform_cost_search()
-        # run_greedy_best_first_search()
+        run_uniform_cost_search()
+        run_greedy_best_first_search()
         run_a_star()
         i += 1

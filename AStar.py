@@ -9,7 +9,6 @@ class AStar:
         heapq.heapify(self.open_list)
         self.close_list = []
         self.initial = initial_node
-        self.goal = None
 
     def start(self, heuristic, search_path, solution_path):
         self.initial.h = heuristic(self.initial)

@@ -1,4 +1,3 @@
-import copy
 import numpy as np
 
 
@@ -10,30 +9,29 @@ class Node:
         self.entries = entries
         self.parent = parent
         self.empty = np.argwhere(entries == 0)[0]
-        print("New Node Created: \n", self.entries, self.empty)
 
     def __lt__(self, other):
         return self.f < other.f
 
     def vertical_move(self):
-        new_node = copy.deepcopy(self)
+        new_entries = np.copy(self.entries)
+        new_node = Node(parent=self, entries=new_entries)
         new_node.empty[0] = (new_node.empty[0] + 1) % 2
         swap(new_node.entries, self.empty, new_node.empty)
-        new_node.parent = self
         return new_node
 
     def horizontal_move(self):
         new_nodes = np.array([])
         if self.empty[1] != 3:
-            right_node = copy.deepcopy(self)
-            right_node.parent = self
+            new_entries = np.copy(self.entries)
+            right_node = Node(parent=self, entries=new_entries)
             right_node.empty[1] = (right_node.empty[1] + 1) % 4
             swap(right_node.entries, self.empty, right_node.empty)
             new_nodes = np.append(new_nodes, right_node)
 
         if self.empty[1] != 0:
-            left_node = copy.deepcopy(self)
-            left_node.parent = self
+            new_entries = np.copy(self.entries)
+            left_node = Node(parent=self, entries=new_entries)
             left_node.empty[1] = (left_node.empty[1] - 1) % 4
             swap(left_node.entries, self.empty, left_node.empty)
             new_nodes = np.append(new_nodes, left_node)
@@ -43,15 +41,15 @@ class Node:
     def wrapping_move(self):
         new_nodes = np.array([])
         if self.empty[1] == 0:
-            right_node = copy.deepcopy(self)
-            right_node.parent = self
+            new_entries = np.copy(self.entries)
+            right_node = Node(parent=self, entries=new_entries)
             right_node.empty[1] = (right_node.empty[1] + 3) % 4
             swap(right_node.entries, self.empty, right_node.empty)
             new_nodes = np.append(new_nodes, right_node)
 
         if self.empty[1] == 3:
-            left_node = copy.deepcopy(self)
-            left_node.parent = self
+            new_entries = np.copy(self.entries)
+            left_node = Node(parent=self, entries=new_entries)
             left_node.empty[1] = (left_node.empty[1] - 3) % 4
             swap(left_node.entries, self.empty, left_node.empty)
             new_nodes = np.append(new_nodes, left_node)
@@ -61,15 +59,15 @@ class Node:
     def diagonal_move(self):
         new_nodes = np.array([])
         # right diagonal
-        right_node = copy.deepcopy(self)
-        right_node.parent = self
+        new_right_entries = np.copy(self.entries)
+        right_node = Node(parent=self, entries=new_right_entries)
         right_node.empty[0] = (right_node.empty[0] + 1) % 2
         right_node.empty[1] = (right_node.empty[1] + 1) % 4
         swap(right_node.entries, self.empty, right_node.empty)
         new_nodes = np.append(new_nodes, right_node)
         # left diagonal
-        left_node = copy.deepcopy(self)
-        left_node.parent = self
+        new_left_entries = np.copy(self.entries)
+        left_node = Node(parent=self, entries=new_left_entries)
         left_node.empty[0] = (left_node.empty[0] - 1) % 2
         left_node.empty[1] = (left_node.empty[1] - 1) % 4
         swap(left_node.entries, self.empty, left_node.empty)

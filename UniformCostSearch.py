@@ -41,22 +41,22 @@ def compute_successors(node):
     successors = np.array([])
 
     vertical = node.vertical_move()
-    vertical.g += 1
+    vertical.g = node.g + 1
     successors = np.append(successors, vertical)
 
     horizontal = node.horizontal_move()
     for element in horizontal:
-        element.g += 1
+        element.g = node.g + 1
     successors = np.append(successors, horizontal)
 
     wrapping = node.wrapping_move()
     for element in wrapping:
-        element.g += 2
+        element.g = node.g + 2
     successors = np.append(successors, wrapping)
 
     diagonal = node.diagonal_move()
     for element in diagonal:
-        element.g += 3
+        element.g = node.g + 3
     successors = np.append(successors, diagonal)
 
     return successors

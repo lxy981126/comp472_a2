@@ -38,6 +38,19 @@ def h1(node):
     return min(distance1, distance2)
 
 
+def hamming_distance(node):
+    entry = node.entries
+    diff1 = 0
+    diff2 = 0
+    for i in range(0, 2):
+        for j in range(0, 4):
+            if entry[i][j] != goal1[i][j]:
+                diff1 += 1
+            if entry[i][j] != goal2[i][j]:
+                diff2 += 1
+    return min(diff1, diff2)
+
+
 def extract_solution_path(node, solution_path):
     with open(solution_path, 'w') as file:
         while node is not None:

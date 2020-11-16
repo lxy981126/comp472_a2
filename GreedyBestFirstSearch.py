@@ -24,9 +24,8 @@ class GreedBestFirstSearch:
                 General.extract_search_path(self.close_list, search_path)
                 return
 
-            successors = compute_successors(current_node[1])
+            successors = compute_successors(current_node[1], heuristic)
             for successor in successors:
-                successor.h = heuristic(successor)
                 node_in_open = General.find_if_in_list(self.open_list, successor)
                 node_in_close = General.find_if_in_list(self.close_list, successor)
                 if node_in_open is not None:
@@ -39,19 +38,26 @@ class GreedBestFirstSearch:
             self.close_list.append(current_node)
 
 
-def compute_successors(node):
+def compute_successors(node, heuristic):
     successors = np.array([])
 
     vertical = node.vertical_move()
+    vertical.h = heuristic(vertical)
     successors = np.append(successors, vertical)
 
     horizontal = node.horizontal_move()
+    for element in horizontal:
+        element.h = heuristic(element)
     successors = np.append(successors, horizontal)
 
     wrapping = node.wrapping_move()
+    for element in wrapping:
+        element.h = heuristic(element)
     successors = np.append(successors, wrapping)
 
     diagonal = node.diagonal_move()
+    for element in diagonal:
+        element.h = heuristic(element)
     successors = np.append(successors, diagonal)
 
     return successors

@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 
 goal1 = np.array([[1, 2, 3, 4], [5, 6, 7, 0]])
@@ -12,6 +13,7 @@ def is_goal(node):
         return False
 
 
+# Monotonic
 def h0(node):
     if np.array_equal(node.entries, goal1) or np.array_equal(node.entries, goal2):
         return 0
@@ -19,9 +21,8 @@ def h0(node):
         return 1
 
 
-# Improved version of Manhattan Distance
-# Cost to adjacent tile = 1
-# Cost to non-adjacent tile = 2, because other tiles need to move first to unblock it
+# Sum of Euclidean distances of all tiles
+# Non-Monotonic
 def h1(node):
     entry = node.entries
     distance1 = 0
@@ -29,25 +30,23 @@ def h1(node):
     for i in range(0, 2):
         for j in range(0, 4):
             index1 = np.argwhere(goal1 == entry[i][j])[0]
-            diff1 = abs(index1[0] - i) + abs(index1[1] - j)
-            distance1 += (diff1 if diff1 <= 1 else 2 * diff1 - 1)
-
+            distance1 += math.pow(index1[0] - i, 2) + math.pow(index1[1] - j, 2)
             index2 = np.argwhere(goal2 == entry[i][j])[0]
-            diff2 = abs(index2[0] - i) + abs(index2[1] - j)
-            distance2 += (diff2 if diff2 <= 1 else 2 * diff2 - 1)
-    return min(distance1, distance2)
+            distance2 += math.pow(index2[0] - i, 2) + math.pow(index2[1] - j, 2)
+    return math.sqrt(min(distance1, distance2))
 
 
-def hamming_distance(node):
+# Number of mismatched columns
+# Monotonic
+def h2(node):
     entry = node.entries
     diff1 = 0
     diff2 = 0
-    for i in range(0, 2):
-        for j in range(0, 4):
-            if entry[i][j] != goal1[i][j]:
-                diff1 += 1
-            if entry[i][j] != goal2[i][j]:
-                diff2 += 1
+    for i in range(0, 4):
+        if not np.array_equal(entry[:, i], goal1[:, i]):
+            diff1 += 1
+        if not np.array_equal(entry[:, i], goal2[:, i]):
+            diff2 += 1
     return min(diff1, diff2)
 
 

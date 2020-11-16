@@ -72,6 +72,15 @@ def extract_search_path(close_list, search_path):
         file.close()
 
 
+def process_failure(search_path, solution_path):
+    with open(search_path, 'w') as file:
+        file.write("No solution")
+        file.close()
+    with open(solution_path, 'w') as file:
+        file.write("No solution")
+        file.close()
+
+
 def find_if_in_list(list_to_search, node):
     next((x for x in list_to_search if np.array_equal(x[1].entries, node.entries)), None)
 

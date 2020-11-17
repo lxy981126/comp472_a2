@@ -8,6 +8,7 @@ def analyze():
     analyze_ucs()
     analyze_gbfs()
     analyze_astar()
+    analyze_scaled_gbfs()
 
 
 def analyze_ucs():
@@ -98,6 +99,12 @@ def analyze_search(searches, algorithm):
         file.write(algorithm + ' Average time: ' + str(avg_time) + '\n')
 
 
+def analyze_scaled_gbfs():
+    gbfs_search = glob.glob('./output/*gbfs_scaled_search.txt')
+    gbfs_solution = glob.glob('./output/*gbfs_scaled_solution.txt')
+    analyze_search(gbfs_search, 'Scaled GBFS')
+    analyze_solution(gbfs_solution, 'Scaled GBFS')
+
+
 if __name__ == '__main__':
     analyze()
-

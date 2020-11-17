@@ -52,28 +52,60 @@ class Node:
 
     def wrapping_move(self):
         new_nodes = np.array([])
-        if self.empty[1] == 0:
+        if self.empty[0] == 0 and self.empty[1] == 0:
+            # down-most
             new_entries = np.copy(self.entries)
             right_node = Node(parent=self, entries=new_entries)
             right_node.empty[1] = (right_node.empty[1] + self.column - 1) % self.column
             swap(right_node.entries, self.empty, right_node.empty)
             new_nodes = np.append(new_nodes, right_node)
 
-        if self.empty[1] == self.column - 1:
-            new_entries = np.copy(self.entries)
-            left_node = Node(parent=self, entries=new_entries)
-            left_node.empty[1] = (left_node.empty[1] - self.column + 1) % self.column
-            swap(left_node.entries, self.empty, left_node.empty)
-            new_nodes = np.append(new_nodes, left_node)
-
-        if self.empty[0] == 0:
+            # right-most
             new_entries = np.copy(self.entries)
             new_node = Node(parent=self, entries=new_entries)
             new_node.empty[0] = (new_node.empty[0] + self.row - 1) % self.row
             swap(new_node.entries, self.empty, new_node.empty)
             new_nodes = np.append(new_nodes, new_node)
 
-        if self.empty[0] == self.row - 1:
+        if self.empty[0] == 0 and self.empty[1] == self.column - 1:
+            # left-most
+            new_entries = np.copy(self.entries)
+            new_node = Node(parent=self, entries=new_entries)
+            new_node.empty[0] = (new_node.empty[0] - self.row + 1) % self.row
+            swap(new_node.entries, self.empty, new_node.empty)
+            new_nodes = np.append(new_nodes, new_node)
+
+            # down-most
+            new_entries = np.copy(self.entries)
+            right_node = Node(parent=self, entries=new_entries)
+            right_node.empty[1] = (right_node.empty[1] + self.column - 1) % self.column
+            swap(right_node.entries, self.empty, right_node.empty)
+            new_nodes = np.append(new_nodes, right_node)
+
+        if self.empty[0] == self.row - 1 and self.empty[1] == 0:
+            # up-most
+            new_entries = np.copy(self.entries)
+            left_node = Node(parent=self, entries=new_entries)
+            left_node.empty[1] = (left_node.empty[1] - self.column + 1) % self.column
+            swap(left_node.entries, self.empty, left_node.empty)
+            new_nodes = np.append(new_nodes, left_node)
+
+            # right-most
+            new_entries = np.copy(self.entries)
+            new_node = Node(parent=self, entries=new_entries)
+            new_node.empty[0] = (new_node.empty[0] + self.row - 1) % self.row
+            swap(new_node.entries, self.empty, new_node.empty)
+            new_nodes = np.append(new_nodes, new_node)
+
+        if self.empty[0] == self.row - 1 and self.empty[1] == self.column - 1:
+            # up-most
+            new_entries = np.copy(self.entries)
+            left_node = Node(parent=self, entries=new_entries)
+            left_node.empty[1] = (left_node.empty[1] - self.column + 1) % self.column
+            swap(left_node.entries, self.empty, left_node.empty)
+            new_nodes = np.append(new_nodes, left_node)
+
+            # left-most
             new_entries = np.copy(self.entries)
             new_node = Node(parent=self, entries=new_entries)
             new_node.empty[0] = (new_node.empty[0] - self.row + 1) % self.row
@@ -84,23 +116,27 @@ class Node:
 
     def diagonal_move(self):
         new_nodes = np.array([])
-        if self.empty[0] != self.row - 1 and self.empty[1] != 0:
+        if (self.empty[0] == 0 and self.empty[1] == self.column - 1) or \
+                (self.empty[0] == self.row - 1 and self.empty[1] == 0):
+            # upper right
             new_right_entries = np.copy(self.entries)
             right_node = Node(parent=self, entries=new_right_entries)
-            right_node.empty[0] = (right_node.empty[0] + 1) % self.row
-            right_node.empty[1] = (right_node.empty[1] - 1) % self.column
-            swap(right_node.entries, self.empty, right_node.empty)
-            new_nodes = np.append(new_nodes, right_node)
-
-        if self.empty[0] != self.row - 1 and self.empty[1] != self.column - 1:
-            new_right_entries = np.copy(self.entries)
-            right_node = Node(parent=self, entries=new_right_entries)
-            right_node.empty[0] = (right_node.empty[0] + 1) % self.row
+            right_node.empty[0] = (right_node.empty[0] - 1) % self.row
             right_node.empty[1] = (right_node.empty[1] + 1) % self.column
             swap(right_node.entries, self.empty, right_node.empty)
             new_nodes = np.append(new_nodes, right_node)
 
-        if self.empty[0] != 0 and self.empty[1] != 0:
+            # bottom left
+            new_left_entries = np.copy(self.entries)
+            left_node = Node(parent=self, entries=new_left_entries)
+            left_node.empty[0] = (left_node.empty[0] + 1) % self.row
+            left_node.empty[1] = (left_node.empty[1] - 1) % self.column
+            swap(left_node.entries, self.empty, left_node.empty)
+            new_nodes = np.append(new_nodes, left_node)
+
+        if (self.empty[0] == 0 and self.empty[1] == 0) or \
+                (self.empty[0] == self.row - 1 and self.empty[1] == self.column - 1):
+            # upper left
             new_left_entries = np.copy(self.entries)
             left_node = Node(parent=self, entries=new_left_entries)
             left_node.empty[0] = (left_node.empty[0] - 1) % self.row
@@ -108,13 +144,13 @@ class Node:
             swap(left_node.entries, self.empty, left_node.empty)
             new_nodes = np.append(new_nodes, left_node)
 
-        if self.empty[0] != 0 and self.empty[1] != self.column - 1:
-            new_left_entries = np.copy(self.entries)
-            left_node = Node(parent=self, entries=new_left_entries)
-            left_node.empty[0] = (left_node.empty[0] - 1) % self.row
-            left_node.empty[1] = (left_node.empty[1] + 1) % self.column
-            swap(left_node.entries, self.empty, left_node.empty)
-            new_nodes = np.append(new_nodes, left_node)
+            # bottom right
+            new_right_entries = np.copy(self.entries)
+            right_node = Node(parent=self, entries=new_right_entries)
+            right_node.empty[0] = (right_node.empty[0] + 1) % self.row
+            right_node.empty[1] = (right_node.empty[1] + 1) % self.column
+            swap(right_node.entries, self.empty, right_node.empty)
+            new_nodes = np.append(new_nodes, right_node)
 
         return new_nodes
 

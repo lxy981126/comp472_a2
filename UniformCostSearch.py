@@ -27,7 +27,7 @@ class UniformCostSearch:
                 node_in_open = General.find_if_in_list(self.open_list, successor)
                 node_in_close = General.find_if_in_list(self.close_list, successor)
                 if node_in_open is not None:
-                    if node_in_open[0] > successor.g:
+                    if node_in_open.g > successor.g:
                         self.open_list.remove(node_in_open)
                         heapq.heapify(self.open_list)
                         heapq.heappush(self.open_list, (successor.g, successor))

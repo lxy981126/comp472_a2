@@ -31,7 +31,7 @@ class AStar:
                 successor.f = successor.h + successor.g
                 node_in_open = General.find_if_in_list(self.open_list, successor)
                 node_in_close = General.find_if_in_list(self.close_list, successor)
-                if node_in_close is not None:
+                if heuristic == General.h1 and node_in_close is not None:
                     if node_in_close.f > successor.f:
                         self.close_list.remove(node_in_close)
                         heapq.heappush(self.open_list, (successor.f, successor))

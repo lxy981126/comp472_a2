@@ -49,9 +49,10 @@ def compute_successors(node, heuristic):
     successors = np.array([])
 
     vertical = node.vertical_move()
-    vertical.g = node.g + 1
-    vertical.h = heuristic(vertical)
-    vertical.f = vertical.g + vertical.h
+    for element in vertical:
+        element.g = node.g + 1
+        element.h = heuristic(element)
+        element.f = element.g + element.h
     successors = np.append(successors, vertical)
 
     horizontal = node.horizontal_move()

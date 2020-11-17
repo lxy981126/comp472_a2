@@ -41,7 +41,8 @@ def compute_successors(node):
     successors = np.array([])
 
     vertical = node.vertical_move()
-    vertical.g = node.g + 1
+    for element in vertical:
+        element.g = node.g + 1
     successors = np.append(successors, vertical)
 
     horizontal = node.horizontal_move()

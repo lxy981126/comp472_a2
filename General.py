@@ -2,8 +2,16 @@ import numpy as np
 import math
 
 
-goal1 = np.array([[1, 2, 3, 4], [5, 6, 7, 0]])
-goal2 = np.array([[1, 3, 5, 7], [2, 4, 6, 0]])
+goal1 = np.array([])
+goal2 = np.array([])
+
+
+def compute_goal(row, column):
+    global goal1
+    global goal2
+    arr = np.append(np.arange(1, row*column), 0)
+    goal1 = np.ndarray.reshape(arr, row, column)
+    goal2 = np.ndarray.reshape(arr, row, column, order='f')
 
 
 def is_goal(node):

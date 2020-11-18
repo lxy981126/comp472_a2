@@ -18,9 +18,9 @@ def generate_inputs(path, row, column, number):
             file.flush()
 
 
-def process_input(row, column):
+def process_input(path, row, column):
     states = np.array([])
-    with open(input_file, 'r') as file:
+    with open(path, 'r') as file:
         for line in file:
             string_list = str.split(line)
             int_list = [int(element) for element in string_list]
@@ -38,8 +38,8 @@ def run_uniform_cost_search():
     process = Process(target=ucs.start, args=(search_path, solution_path))
     start_time = time.time()
     process.start()
-    # process.join(timeout=60)
-    process.join()
+    process.join(timeout=60)
+    # process.join()
     exec_time = time.time() - start_time
     if process.is_alive():
         process.terminate()
@@ -92,16 +92,15 @@ def run_a_star(heuristic):
             file.write(str(exec_time))
 
 
-def run_scaled_gbfs(initial, row, column):
-    timeout = row*row*column*column
-    search_path = "./output/" + str(i) + "_gbfs_scaled_search.txt"
-    solution_path = "./output/" + str(i) + "_gbfs_scaled_solution.txt"
+def run_scaled_gbfs(initial, index):
+    search_path = "./output/" + str(index) + "_gbfs_scaled_search.txt"
+    solution_path = "./output/" + str(index) + "_gbfs_scaled_solution.txt"
 
     gbfs = GreedBestFirstSearch(initial)
-    process = Process(target=gbfs.start, args=(General.h1, search_path, solution_path))
+    process = Process(target=gbfs.start, args=(General.h2, search_path, solution_path))
     start_time = time.time()
     process.start()
-    process.join(timeout=timeout)
+    process.join(timeout=600)
     exec_time = time.time() - start_time
     if process.is_alive():
         process.terminate()
@@ -114,20 +113,23 @@ def run_scaled_gbfs(initial, row, column):
 
 def scale_up():
     path = "scaled_inputs.txt"
-    row = random.randrange(0, 10)
-    column = random.randrange(0, 10)
+    row = random.randrange(1, 10)
+    column = random.randrange(1, 10)
+    index = 0
 
-    generate_inputs(path=path, row=row, column=column, number=20)
-    initials = process_input(row=row, column=column)
+    generate_inputs(path=path, row=row, column=column, number=5)
+    initials = process_input(path=path, row=row, column=column)
 
     for initial in initials:
-        run_scaled_gbfs(initial, row=row, column=column)
+        print(initial.entries)
+        run_scaled_gbfs(initial, index)
+        index += 1
 
 
 if __name__ == '__main__':
     input_file = "inputs.txt"
     generate_inputs(path=input_file, row=2, column=4, number=50)
-    initial_nodes = process_input(row=2, column=4)
+    initial_nodes = process_input(path=input_file, row=2, column=4)
     i = 0
 
     for initial_node in initial_nodes:
@@ -139,3 +141,4 @@ if __name__ == '__main__':
         run_a_star(General.h2)
         i += 1
 
+    scale_up()

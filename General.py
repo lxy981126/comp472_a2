@@ -33,10 +33,11 @@ def h0(node):
 # Non-Monotonic
 def h1(node):
     entry = node.entries
+    shape = np.shape(entry)
     distance1 = 0
     distance2 = 0
-    for i in range(0, 2):
-        for j in range(0, 4):
+    for i in range(0, shape[0]):
+        for j in range(0, shape[1]):
             index1 = np.argwhere(goal1 == entry[i][j])[0]
             distance1 += math.pow(index1[0] - i, 2) + math.pow(index1[1] - j, 2)
             index2 = np.argwhere(goal2 == entry[i][j])[0]
@@ -50,7 +51,7 @@ def h2(node):
     entry = node.entries
     diff1 = 0
     diff2 = 0
-    for i in range(0, 4):
+    for i in range(0, np.shape(entry)[1]):
         if not np.array_equal(entry[:, i], goal1[:, i]):
             diff1 += 1
         if not np.array_equal(entry[:, i], goal2[:, i]):
@@ -62,7 +63,7 @@ def extract_solution_path(node, solution_path):
     with open(solution_path, 'w') as file:
         while node is not None:
             values = np.array([[node.f, node.g, node.h]])
-            state = np.ndarray.reshape(node.entries, 1, 8)
+            state = np.ndarray.reshape(node.entries, 1, node.row*node.column)
             values = np.append(values, state)
             np.savetxt(file, [values], delimiter=' ', fmt='%i')
             file.flush()
@@ -73,7 +74,7 @@ def extract_solution_path(node, solution_path):
 def extract_search_path(close_list, search_path):
     with open(search_path, 'w') as file:
         for node in close_list:
-            state = np.ndarray.reshape(node[1].entries, 1, 8)
+            state = np.ndarray.reshape(node[1].entries, 1, node.row*node.column)
             np.savetxt(file, state, delimiter=' ', fmt='%i')
             file.flush()
         file.close()

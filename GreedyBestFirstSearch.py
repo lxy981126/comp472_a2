@@ -11,6 +11,7 @@ class GreedBestFirstSearch:
         self.initial = initial_node
 
     def start(self, heuristic, search_path, solution_path):
+        General.compute_goal(self.initial.row, self.initial.column)
         self.initial.h = heuristic(self.initial)
         heapq.heappush(self.open_list, (self.initial.h, self.initial))
         while True:

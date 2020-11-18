@@ -11,6 +11,7 @@ class AStar:
         self.initial = initial_node
 
     def start(self, heuristic, search_path, solution_path):
+        General.compute_goal(self.initial.row, self.initial.column)
         self.initial.h = heuristic(self.initial)
         self.initial.f = self.initial.h + self.initial.g
         heapq.heappush(self.open_list, (self.initial.f, self.initial))

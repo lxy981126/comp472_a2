@@ -11,6 +11,7 @@ class UniformCostSearch:
         self.initial = initial_node
 
     def start(self, search_path, solution_path):
+        General.compute_goal(self.initial.row, self.initial.column)
         heapq.heappush(self.open_list, (self.initial.g, self.initial))
         while True:
             if len(self.open_list) == 0:

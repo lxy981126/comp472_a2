@@ -74,7 +74,7 @@ def extract_solution_path(node, solution_path):
 def extract_search_path(close_list, search_path):
     with open(search_path, 'w') as file:
         for node in close_list:
-            state = np.ndarray.reshape(node[1].entries, 1, node.row*node.column)
+            state = np.ndarray.reshape(node[1].entries, 1, node[1].row*node[1].column)
             np.savetxt(file, state, delimiter=' ', fmt='%i')
             file.flush()
         file.close()
